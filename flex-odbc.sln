@@ -1,0 +1,45 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{5D20AA90-6969-D8BD-9DCD-8634F4692FDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "csharp_sample", "csharp_sample", "{B7D35B49-91DA-5D97-8AF3-CB462C30C319}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2021673F-1962-7618-F79D-7DADF87BC4DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidecar", "samples\csharp_sample\src\Sidecar.csproj", "{40C6058F-D273-E3A4-F6D0-3FE97E11915B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{48D89CE6-73A7-4D69-A39A-DFE2CFF4CC77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sidecar.Tests", "samples\csharp_sample\test\Sidecar.Tests.csproj", "{AF61D811-22CE-DE3C-E72A-D4BB6488BE02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40C6058F-D273-E3A4-F6D0-3FE97E11915B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40C6058F-D273-E3A4-F6D0-3FE97E11915B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40C6058F-D273-E3A4-F6D0-3FE97E11915B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40C6058F-D273-E3A4-F6D0-3FE97E11915B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF61D811-22CE-DE3C-E72A-D4BB6488BE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF61D811-22CE-DE3C-E72A-D4BB6488BE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF61D811-22CE-DE3C-E72A-D4BB6488BE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF61D811-22CE-DE3C-E72A-D4BB6488BE02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B7D35B49-91DA-5D97-8AF3-CB462C30C319} = {5D20AA90-6969-D8BD-9DCD-8634F4692FDA}
+		{2021673F-1962-7618-F79D-7DADF87BC4DF} = {B7D35B49-91DA-5D97-8AF3-CB462C30C319}
+		{40C6058F-D273-E3A4-F6D0-3FE97E11915B} = {2021673F-1962-7618-F79D-7DADF87BC4DF}
+		{48D89CE6-73A7-4D69-A39A-DFE2CFF4CC77} = {B7D35B49-91DA-5D97-8AF3-CB462C30C319}
+		{AF61D811-22CE-DE3C-E72A-D4BB6488BE02} = {48D89CE6-73A7-4D69-A39A-DFE2CFF4CC77}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D10143DF-B749-439E-98E7-A011FB76EDF8}
+	EndGlobalSection
+EndGlobal

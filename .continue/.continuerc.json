@@ -1,0 +1,8 @@
+{
+  "mergeBehavior": "merge",
+  "name": "flex-odbc",
+  "rules": [
+    "Always prefer C++20 standard library over Boost.",
+    "Reference /schema/driver.proto for all inter-process logic."
+  ]
+}

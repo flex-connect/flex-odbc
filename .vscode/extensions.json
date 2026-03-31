@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    // --- The Core Languages ---
+    "ms-vscode.cpptools",           // C++ Intelligence & Debugging
+    "ms-vscode.cmake-tools",        // CMake Build Support
+    "ms-dotnettools.csdevkit",      // C# Dev Kit (Modern .NET 9/10)
+    "vscjava.vscode-java-pack",     // Java Extension Pack (Language Support + Maven/Gradle)
+
+    // --- High-Performance Tooling ---
+    "ms-vscode.cpptools-extension-pack", // Essential C++ Add-ons
+    "drblury.protobuf-vsc",         // Protobuf Syntax Highlighting & Snippets
+
+    // --- 2026 Productivity & Quality ---
+    "twxs.cmake",                   // CMake Syntax Highlighting & Snippets
+    "usernamehw.errorlens",         // Inline Error Highlighting (Catch bugs faster)
+    "eamodio.gitlens",              // Deep Git History (Track performance regressions)
+    "continuedev.continue"          // Your AI Assistant (Continue)
+  ]
+}
