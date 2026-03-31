@@ -1,0 +1,67 @@
+# Copy this to ~/.continue/config.yaml or your project root
+name: flax-odbc
+version: 1.0.0
+schema: v1
+
+# Global context for all models to understand the Interop requirement
+systemMessage: |
+  You are an expert Systems Architect specializing in C++20, JNI (Java), and P/Invoke (C#).
+  You are building a high-performance ODBC Driver Framework.
+  Key priorities:
+  - Memory safety across language boundaries (Native to Managed).
+  - Handle-based architecture (HENV, HDBC, HSTMT).
+  - Clean API abstraction for third-party driver implementers.
+
+models:
+  # 🏆 THE ARCHITECT: Use for repo structure, API design, and Interop planning.
+  - name: Gemini 3.1 Pro
+    provider: gemini
+    model: gemini-3.1-pro-preview
+    # Set this in your .env
+    apiKey: ${GEMINI_API_KEY}
+    roles: [chat, summarize]
+    systemMessage: "Focus on high-level design, architectural patterns, and spec compliance."
+
+  # 🧠 THE LOGIC AUDITOR: Use for debugging and safety checks.
+  - name: "DeepSeek: R1 0528"
+    provider: openrouter
+    model: deepseek/deepseek-r1-0528
+    # Set this in your .env
+    apiKey: ${OPENROUTER_API_KEY}
+    roles: [chat, edit]
+    systemMessage: |
+      You are a Critical Logic Auditor. Your job is to find race conditions, 
+      memory leaks, and spec violations in C++ ODBC driver code. 
+      Always double-check pointer arithmetic and JNI/PInvoke memory boundaries.
+
+  # 🛠️ THE WORKHORSE: Use for implementing C++, Java, and C# code.
+  - name: Qwen 2.5 Coder (14B)
+    provider: ollama
+    model: qwen2.5-coder:14b
+    roles: [chat, edit, apply]
+    systemMessage: "You are a professional C++, Java, and C# developer. Provide concise, high-performance code."
+
+  # ✍️ THE SPECIALIST: High-precision autocomplete for C++ systems code.
+  - name: Codestral
+    provider: mistral
+    model: codestral-latest
+    # Set this in your .env
+    apiKey: ${MISTRAL_API_KEY}
+
+    roles: [autocomplete]
+
+  # 🔍 THE INDEXER: For @Codebase RAG support across sub-projects.
+  - name: Nomic Embed
+    provider: ollama
+    model: nomic-embed-text
+    roles: [embed]
+
+# Context Providers for multi-project awareness
+context:
+  - provider: code
+    params:
+      # Increased for multi-language context
+      nResults: 20
+  - provider: docs
+  - provider: terminal
+  - provider: diff

@@ -1,0 +1,104 @@
+# ==========================================
+# 🤖 AI Assistant & Local Environment
+# ==========================================
+.continue/config.yaml
+.continue/sessions/
+.continue/index/
+.continue/dev_data/
+.env
+*.user
+*.suo
+*.sln.docstates
+
+# --- SHARED CONFIGS (The "Do Not Ignore" List) ---
+!.continue/rules/*.md
+!.continue/config.template.yaml
+!.vscode/extensions.json
+!.vsconfig
+!setup_project.ps1
+!scripts/*.*
+
+# ==========================================
+# 🛠️ C++ / CMake / Multi-Platform (Recursive)
+# ==========================================
+**/[Bb]build/
+**/out/
+**/bin/
+**/lib/
+**/x64/
+**/x86/
+**/ARM64/
+
+# Windows/MSVC Compiler artifacts
+**/.vs/
+**/*.pdb
+**/*.ilk
+**/*.exp
+**/*.lib
+**/*.dll
+**/*.exe
+**/Debug/
+**/Release/
+
+# Linux/macOS Compiler & Debugger artifacts
+**/*.o
+**/*.a
+**/*.so
+**/*.dylib
+**/*.out
+**/*.app
+**/.vscode/ipch/
+**/.gdb_history
+**/.lldb_history
+
+# CMake internals
+**/CMakeCache.txt
+**/CMakeFiles/
+**/CMakeSettings.json
+**/CMakeUserPresets.json
+**/_deps/
+**/install_manifest.txt
+**/compile_commands.json
+
+# ==========================================
+# ⚡ C# / .NET (Recursive)
+# ==========================================
+**/bin/
+**/obj/
+**/*.swp
+**/*.lut
+**/*.log
+**/*.pfx
+**/*.publishsettings
+
+# ==========================================
+# ☕ Java / Maven (Recursive)
+# ==========================================
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+**/*.nar
+**/target/          # Maven's main output folder
+**/.settings/      # Eclipse/IDE Java settings
+**/.classpath
+**/.project
+
+# ==========================================
+# 🐍 Python (For your setup scripts)
+# ==========================================
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/.venv/
+**/venv/
+**/env/
+
+# ==========================================
+# 🌍 OS & IDE Specific
+# ==========================================
+**/.DS_Store
+**/Thumbs.db
+**/.history/
+**/.ionide/
+**/.vscode/*.log

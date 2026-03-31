@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package flexodbc;
+
+// Placeholder for Protobuf messages
+message PlaceholderRequest {
+  string message = 1;
+}
+
+message PlaceholderResponse {
+  string response = 1;
+}

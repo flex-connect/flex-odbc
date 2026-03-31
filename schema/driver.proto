@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package flexodbc;
+
+// Language specific options
+option java_package = "com.flexodbc.sidecar.proto";
+option java_multiple_files = true;
+option csharp_namespace = "FlexOdbc.Sidecar.Proto";
+
+// Represents a batch of rows for the Zero-Copy & minimal context-switch intent
+message RowSet {
+    repeated Row rows = 1;
+    bool has_more = 2;
+    string sql_state = 3;  // Standard ODBC SQLState for Error Mapping
+    string error_message = 4;
+}
+
+message Row {
+    repeated bytes columns = 1; // Raw bytes for zero-copy parsing in C++ Host
+}
+
+message ConnectRequest {
+    string connection_string = 1;
+}
+
+message ConnectResponse {
+    bool success = 1;
+    string sql_state = 2;
+    string error_message = 3;
+}
+
+message ExecuteRequest {
+    string query = 1;
+    int32 max_rows = 2; // Batch size requested by C++ host
+}
+
+message ExecuteResponse {
+    bool success = 1;
+    RowSet initial_batch = 2;
+}
+
+message FetchRequest {
+    int32 max_rows = 1;
+}
+
+// Emulates a streaming Fetch RPC over standard IPC pipe
+message FetchResponse {
+    RowSet batch = 1;
+}
+
+message DisconnectRequest {}
+message DisconnectResponse {
+    bool success = 1;
+}
