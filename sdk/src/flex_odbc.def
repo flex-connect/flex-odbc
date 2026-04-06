@@ -1,0 +1,8 @@
+LIBRARY flex_odbc
+EXPORTS
+    SQLAllocHandle
+    SQLFreeHandle
+    SQLAllocEnv
+    SQLFreeEnv
+    SQLAllocConnect
+    SQLFreeConnect
