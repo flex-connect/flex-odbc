@@ -22,5 +22,6 @@ The goal of **flex-odbc** is to provide a high-performance C++ wrapper that dele
   - `ipc.mode`: `pipe` or `socket`.
 
 ## 3. The Implementation Samples
-- Located in `/samples/java_sample` and `/samples/csharp_sample`.
+- Located in `/samples/cpp_sample`, `/samples/java_sample`, and `/samples/csharp_sample`.
 - These are standalone executables that start a Protobuf server and wait for commands from the C++ Host.
+- 

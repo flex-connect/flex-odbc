@@ -29,4 +29,3 @@ message ConnectResponse {
 service OdbcDriver {
   rpc Connect(ConnectRequest) returns (ConnectResponse);
 }
-

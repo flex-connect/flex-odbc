@@ -9,5 +9,22 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.24.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.61.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.62.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Data.Odbc" Version="8.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="flex_odbc.proto" GrpcServices="Both" />
+  </ItemGroup>
+
+  <!-- Explicitly include generated Protobuf files -->
+  <ItemGroup>
+    <Compile Include="obj\Debug\net8.0\FlexOdbc.cs" />
+    <Compile Include="obj\Debug\net8.0\FlexOdbcGrpc.cs" />
+  </ItemGroup>
+
 </Project>
