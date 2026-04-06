@@ -19,15 +19,24 @@
 !scripts/*.*
 
 # ==========================================
-# 🛠️ C++ / CMake / Multi-Platform (Recursive)
+# 🛠️ C++ / CMake / Multi-Platform
 # ==========================================
-**/[Bb]build/
+# Explicit build directories
+/sdk/build/
+/test/build/
+/samples/*/build/
+
+# Generic build/output directories (recursive)
+**/[Bb]uild/
 **/out/
 **/bin/
 **/lib/
 **/x64/
 **/x86/
 **/ARM64/
+
+# Generated Protobuf files (language-agnostic)
+**/proto_gen/
 
 # Windows/MSVC Compiler artifacts
 **/.vs/
@@ -39,6 +48,9 @@
 **/*.exe
 **/Debug/
 **/Release/
+**/*.vcxproj.user # Visual Studio user preferences
+**/*.vcxproj.filters # Visual Studio filter files (often generated)
+**/*.vcxproj.user.filters # More Visual Studio noise
 
 # Linux/macOS Compiler & Debugger artifacts
 **/*.o
@@ -70,6 +82,7 @@
 **/*.log
 **/*.pfx
 **/*.publishsettings
+**/*.user.json # .NET user secrets often left behind
 
 # ==========================================
 # ☕ Java / Maven (Recursive)
@@ -102,3 +115,6 @@
 **/.history/
 **/.ionide/
 **/.vscode/*.log
+# VS Code internal workspace storage
+**/.vscode-test/
+**/.vscode/storage/
