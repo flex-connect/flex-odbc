@@ -6,3 +6,6 @@ EXPORTS
     SQLFreeEnv
     SQLAllocConnect
     SQLFreeConnect
+    SQLConnect
+    SQLDriverConnect
+    SQLDisconnect

@@ -5,6 +5,10 @@
 #include <sqlext.h>
 #include <mutex>
 #include <unordered_set>
+#include <memory> // For std::unique_ptr
+
+#include "flex_sdk/process_launcher.hpp" // Include for ProcessLauncher
+#include "flex_sdk/ipc_channel.hpp"      // Include for IpcChannel
 
 namespace flexodbc {
 
@@ -50,6 +54,8 @@ private:
     Environment* env_;
     std::mutex mutex_;
     std::unordered_set<Statement*> statements_;
+    std::unique_ptr<ProcessLauncher> sidecar_process_;
+    std::unique_ptr<IpcChannel> ipc_channel_;
 
 public:
     explicit Connection(Environment* env) : env_(env) {
@@ -62,6 +68,7 @@ public:
         if (env_) {
             env_->RemoveConnection(this);
         }
+        // ProcessLauncher and IpcChannel destructors will handle their cleanup
     }
 
     SQLSMALLINT GetHandleType() const override { return SQL_HANDLE_DBC; }
@@ -75,6 +82,26 @@ public:
     void RemoveStatement(Statement* stmt) {
         std::lock_guard<std::mutex> lock(mutex_);
         statements_.erase(stmt);
+    }
+
+    // Method to set the sidecar process for this connection
+    void SetSidecarProcess(std::unique_ptr<ProcessLauncher> launcher) {
+        sidecar_process_ = std::move(launcher);
+    }
+
+    // Method to get the sidecar process (for IPC handle access)
+    ProcessLauncher* GetSidecarProcess() const {
+        return sidecar_process_.get();
+    }
+
+    // Method to set the IPC channel for this connection
+    void SetIpcChannel(std::unique_ptr<IpcChannel> channel) {
+        ipc_channel_ = std::move(channel);
+    }
+
+    // Method to get the IPC channel
+    IpcChannel* GetIpcChannel() const {
+        return ipc_channel_.get();
     }
 };
 
@@ -102,3 +129,5 @@ public:
 };
 
 } // namespace flexodbc
+
+

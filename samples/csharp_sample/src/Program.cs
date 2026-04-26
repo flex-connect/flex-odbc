@@ -1,75 +1,148 @@
-using Grpc.Core;
-using flexodbc;
+using FlexOdbc.Sidecar.Proto;
+using Google.Protobuf;
 using System.Data.Odbc; // For local SQL server connection
 
-namespace Sidecar
+namespace FlexOdbc.Sidecar.CSharp
 {
-    class OdbcDriverImpl : OdbcDriver.OdbcDriverBase
+    class Program
     {
-        public override Task<ConnectResponse> Connect(ConnectRequest request, ServerCallContext context)
+        static void Main(string[] args)
+        {
+            Console.WriteLine("C# Sidecar started. Waiting for commands...");
+
+            // Use standard input/output for IPC communication with length-prefixing
+            using (var stdin = Console.OpenStandardInput())
+            using (var stdout = Console.OpenStandardOutput())
+            {
+                while (true)
+                {
+                    // Read message length (4 bytes)
+                    byte[] lengthBytes = new byte[4];
+                    int bytesRead = stdin.Read(lengthBytes, 0, 4);
+                    if (bytesRead == 0) // End of stream, parent process disconnected
+                    {
+                        Console.WriteLine("Parent process disconnected. Exiting.");
+                        break;
+                    }
+                    if (bytesRead < 4)
+                    {
+                        Console.Error.WriteLine($"Received {bytesRead} bytes, expected 4 for message length.");
+                        // Handle error or partial read
+                        break;
+                    }
+
+                    uint messageLength = BitConverter.ToUInt32(lengthBytes, 0);
+                    byte[] messageBytes = new byte[messageLength];
+                    bytesRead = stdin.Read(messageBytes, 0, (int)messageLength);
+                    if (bytesRead < messageLength)
+                    {
+                        Console.Error.WriteLine($"Received {bytesRead} bytes, expected {messageLength} for message payload.");
+                        // Handle error or partial read
+                        break;
+                    }
+
+                    // Determine message type and deserialize
+                    // For now, let's assume the first message is always DriverConnectRequest
+                    // In a more robust system, you'd have a message envelope with a type ID
+                    // or a way to infer the message type.
+                    try
+                    {
+                        // Attempt to parse as DriverConnectRequest
+                        DriverConnectRequest connectRequest = DriverConnectRequest.Parser.ParseFrom(messageBytes);
+                        Console.WriteLine($"Received DriverConnectRequest: {connectRequest.ConnectionString}");
+
+                        DriverConnectResponse connectResponse = HandleDriverConnect(connectRequest);
+                        SendProtobufMessage(stdout, connectResponse);
+                    }
+                    catch (InvalidProtocolBufferException)
+                    {
+                        // Fallback: Attempt to parse as DisconnectRequest
+                        try
+                        {
+                            DisconnectRequest disconnectRequest = DisconnectRequest.Parser.ParseFrom(messageBytes);
+                            Console.WriteLine("Received DisconnectRequest.");
+                            DisconnectResponse disconnectResponse = HandleDisconnect(disconnectRequest);
+                            SendProtobufMessage(stdout, disconnectResponse);
+                            // After disconnect, we typically exit
+                            break;
+                        }
+                        catch (InvalidProtocolBufferException)
+                        {
+                            Console.Error.WriteLine("Received unknown Protobuf message type.");
+                            // Send an error response or just break
+                            break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine($"Error handling message: {ex.Message}");
+                        break; // Exit on error
+                    }
+                }
+            }
+        }
+
+        static DriverConnectResponse HandleDriverConnect(DriverConnectRequest request)
         {
             try
             {
-                // Attempt to connect to a local SQL server using the provided connection string
-                using (OdbcConnection connection = new OdbcConnection(request.InConnectionString))
+                using (OdbcConnection connection = new OdbcConnection(request.ConnectionString))
                 {
                     connection.Open();
-                    // If connection is successful, return success
-                    return Task.FromResult(new ConnectResponse
+                    return new DriverConnectResponse
                     {
-                        OutConnectionString = request.InConnectionString,
-                        OutConnectionStringLength = request.InConnectionString.Length,
+                        Success = true,
                         SqlState = "00000", // Success
-                        NativeError = 0,
-                        MessageText = "Connection successful."
-                    });
+                        ErrorMessage = "Connection successful."
+                    };
                 }
             }
             catch (OdbcException ex)
             {
-                // Handle ODBC specific errors
-                return Task.FromResult(new ConnectResponse
+                // Get SQLState from the first OdbcError, or default to a general error
+                string sqlState = "HY000";
+                if (ex.Errors.Count > 0)
                 {
-                    OutConnectionString = "",
-                    OutConnectionStringLength = 0,
-                    SqlState = ex.SQLState,
-                    NativeError = ex.NativeError,
-                    MessageText = ex.Message
-                });
+                    sqlState = ex.Errors[0].SQLState;
+                }
+                return new DriverConnectResponse
+                {
+                    Success = false,
+                    SqlState = sqlState,
+                    ErrorMessage = ex.Message
+                };
             }
             catch (Exception ex)
             {
-                // Handle any other general exceptions
-                return Task.FromResult(new ConnectResponse
+                return new DriverConnectResponse
                 {
-                    OutConnectionString = "",
-                    OutConnectionStringLength = 0,
+                    Success = false,
                     SqlState = "HY000", // General Error
-                    NativeError = -1, // Indicate a non-ODBC specific error
-                    MessageText = ex.Message
-                });
+                    ErrorMessage = ex.Message
+                };
             }
         }
-    }
 
-    class Program
-    {
-        const int Port = 50051; // This port should be configured to be dynamic later
-
-        public static void Main(string[] args)
+        static DisconnectResponse HandleDisconnect(DisconnectRequest request)
         {
-            Server server = new Server
-            {
-                Services = { OdbcDriver.BindService(new OdbcDriverImpl()) },
-                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
-            };
-            server.Start();
+            Console.WriteLine("Handling Disconnect Request.");
+            // Perform any cleanup here if necessary
+            return new DisconnectResponse { Success = true };
+        }
 
-            Console.WriteLine("Sidecar server listening on port " + Port);
-            Console.WriteLine("Press any key to stop the server...");
-            Console.ReadKey();
+        static void SendProtobufMessage(Stream outputStream, IMessage message)
+        {
+            byte[] serializedMessage = message.ToByteArray();
+            uint messageLength = (uint)serializedMessage.Length;
 
-            server.ShutdownAsync().Wait();
+            // Write length prefix (4 bytes)
+            byte[] lengthBytes = BitConverter.GetBytes(messageLength);
+            outputStream.Write(lengthBytes, 0, 4);
+
+            // Write actual message
+            outputStream.Write(serializedMessage, 0, serializedMessage.Length);
+            outputStream.Flush();
         }
     }
 }
+

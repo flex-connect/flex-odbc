@@ -7,6 +7,10 @@ import sys
 import time
 import zipfile
 
+# Configure stdout for UTF-8 encoding to prevent UnicodeEncodeError
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
+
 # --- Configuration ---
 VS_CONFIG_PATH = os.path.join(os.getcwd(), ".vsconfig") 
 VCPKG_ROOT = r"C:\vcpkg"

@@ -11,7 +11,7 @@ option csharp_namespace = "FlexOdbc.Sidecar.Proto";
 message RowSet {
     repeated Row rows = 1;
     bool has_more = 2;
-    string sql_state = 3;  // Standard ODBC SQLState for Error Mapping
+    string sql_state = 3; // Standard ODBC SQLState for Error Mapping
     string error_message = 4;
 }
 
@@ -24,6 +24,16 @@ message ConnectRequest {
 }
 
 message ConnectResponse {
+    bool success = 1;
+    string sql_state = 2;
+    string error_message = 3;
+}
+
+message DriverConnectRequest {
+    string connection_string = 1;
+}
+
+message DriverConnectResponse {
     bool success = 1;
     string sql_state = 2;
     string error_message = 3;
@@ -52,3 +62,4 @@ message DisconnectRequest {}
 message DisconnectResponse {
     bool success = 1;
 }
+

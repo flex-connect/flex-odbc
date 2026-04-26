@@ -1,2 +1,5 @@
-// C++ Unit tests placeholder
-int main() { return 0; }
+#include <gtest/gtest.h>
+
+TEST(FlexOdbcTest, BasicTest) {
+  EXPECT_EQ(1, 1);
+}

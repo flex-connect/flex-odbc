@@ -1,0 +1,11 @@
+{
+  "name": "flex-odbc",
+  "version-string": "1.0.0",
+  "dependencies": [
+    {
+      "name": "protobuf",
+      "features": ["zlib"]
+    },
+    "gtest"
+  ]
+}
